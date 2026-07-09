@@ -16,19 +16,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class DepartamentoController {
 
     /**
+     * Aqui ya estamos inyectando la capa servce sobre el controller
+     */
+
+    private final DepartamentosService service;
+
+    public DepartamentoController(DepartamentosService service) {
+        this.service = service;
+    }
+
+    /**
      * Nuevo recursos : Ingresar información -> POST
      * Obtener recursos: GET
      * Actualizar recursos: PUT / PATCH
      * Eliminar recursos: DELETE
      */
+
     @PostMapping
     public ResponseEntity<ApiResponse<DepartamentoDTO>> nuevoDepartamento(@Valid @RequestBody DepartamentoDTO json){
         try{
-            ApiResponse<DepartamentoDTO> respuesta = new ApiResponse<>(true, "Datos ingresados exitosamente", json);
+            DepartamentoDTO dto = service.nuevoDepartamento(json);
+            ApiResponse<DepartamentoDTO> respuesta = new ApiResponse<>(true, "Datos ingresados exitosamente", dto);// Aqui el json ya viene con el ID, a difenrecia de solo el json
             return ResponseEntity.ok(respuesta);
         }catch (Exception e){
             e.printStackTrace();
-            ApiResponse<DepartamentoDTO> respuesta = new ApiResponse<>(false, "El proceso no se pudo completar", json);
+            ApiResponse<DepartamentoDTO> respuesta = new ApiResponse<>(false, "El proceso no se pudo completar", json); // Aqui no es dto, sino que se devuelven los datos que no se pudieron ingresar
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
         }
     }

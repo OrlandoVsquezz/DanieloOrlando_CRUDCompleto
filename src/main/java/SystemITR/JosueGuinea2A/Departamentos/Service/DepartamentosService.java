@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DepartamentosService {
 
-    //Forma 1 de inyección de dependencias y la mas recomendada
+    // Inyección de dependencias y la mas recomendada
     private final DepartamentosRepository repo;
     public DepartamentosService(DepartamentosRepository repo){
         this.repo = repo;
