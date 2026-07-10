@@ -7,6 +7,10 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class DepartamentosService {
@@ -27,9 +31,11 @@ public class DepartamentosService {
             return convertirADTO(entitySave);
         }catch (Exception e){
             log.error("Error al ingresar la información del departamento" + e.getMessage());
-            throw new RuntimeException("Error al registrar el departamento");
+            return null;
         }
     }
+
+
 
     private DepartamentosEntity convertirAEntity(@Valid DepartamentoDTO dto) {
         DepartamentosEntity objEntity = new DepartamentosEntity();
@@ -45,5 +51,10 @@ public class DepartamentosService {
         objDTO.setAbreviatura(entity.getAbreviatura());
         objDTO.setUbicacion(entity.getUbicacion());
         return objDTO;
+    }
+
+    public List<DepartamentoDTO> obtenerTodo() {
+        List<DepartamentosEntity> data = repo.findAll();
+        return data.stream().map(this::convertirADTO).collect(Collectors.toList()); // El map le da los valores del entity al dto
     }
 }
